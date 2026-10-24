@@ -9,7 +9,7 @@ function initAudio(){if(AC)return;try{AC=new(window.AudioContext||window.webkitA
  /* outdoor reverb / echo tail: decaying stereo noise impulse response */
  const n=Math.floor(AC.sampleRate*1.8),ir=AC.createBuffer(2,n,AC.sampleRate);
  for(let c=0;c<2;c++){const ch=ir.getChannelData(c);for(let i=0;i<n;i++){const t=i/n;ch[i]=(R()*2-1)*Math.pow(1-t,2.6)*(t<.01?t*100:1)}}
- REV=AC.createConvolver();REV.buffer=ir;const rg=AC.createGain();rg.gain.value=.5;REV.connect(rg);rg.connect(OUT)
+ REV=AC.createConvolver();REV.buffer=ir;const rg=AC.createGain();rg.gain.value=.5;REV.connect(rg);rg.connect(OUT);window.dispatchEvent(new Event('voxel-audio-ready'))
 }catch(e){AC=null}}
 function tone(f0,f1,d,ty,g){if(!AC)return;const t=AC.currentTime,o=AC.createOscillator(),a=AC.createGain();o.type=ty;o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(Math.max(1,f1),t+d);a.gain.setValueAtTime(g,t);a.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(a);a.connect(OUT);o.start(t);o.stop(t+d)}
 function noise(d,g,hp){if(!AC)return;const t=AC.currentTime,s=AC.createBufferSource(),f=AC.createBiquadFilter(),a=AC.createGain();s.buffer=NB;f.type='highpass';f.frequency.value=hp;a.gain.setValueAtTime(g,t);a.gain.exponentialRampToValueAtTime(.001,t+d);s.connect(f);f.connect(a);a.connect(OUT);s.start(t,R()*.4);s.stop(t+d)}

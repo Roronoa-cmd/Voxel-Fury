@@ -33,8 +33,11 @@ select{background:#14123a;color:#fff;border:1px solid #3a3470;border-radius:6px;
 #dmg{position:absolute;inset:0;box-shadow:inset 0 0 150px 45px #f00;opacity:0}
 #dirind{position:absolute;left:50%;top:50%;width:0;height:0;opacity:0}
 #dirind i{position:absolute;left:-70px;top:-200px;width:140px;height:40px;border-top:7px solid rgba(255,40,40,.95);border-radius:50% 50% 0 0/100% 100% 0 0}
-#xh{position:absolute;left:50%;top:50%;width:0;height:0}
+#xh{position:absolute;left:50%;top:50%;width:0;height:0;transform:scale(var(--xs,1))}
 #xh i{position:absolute;background:var(--xc,#fff);box-shadow:0 0 2px #000}
+#xh[data-style="1"] i,#xh[data-style="2"] i{display:none}
+#xh[data-style="1"]:after{content:"";position:absolute;left:-3px;top:-3px;width:6px;height:6px;border-radius:50%;background:var(--xc,#fff);box-shadow:0 0 2px #000}
+#xh[data-style="2"]:after{content:"";position:absolute;left:-7px;top:-7px;width:14px;height:14px;border:2px solid var(--xc,#fff);border-radius:50%;box-shadow:0 0 2px #000}
 #xh i:nth-child(1){left:-1px;top:-14px;width:2px;height:8px}#xh i:nth-child(2){left:-1px;top:6px;width:2px;height:8px}
 #xh i:nth-child(3){top:-1px;left:-14px;width:8px;height:2px}#xh i:nth-child(4){top:-1px;left:6px;width:8px;height:2px}
 #hm{position:absolute;left:50%;top:50%;width:26px;height:26px;margin:-13px 0 0 -13px;opacity:0;transition:opacity .25s}
@@ -64,7 +67,13 @@ select{background:#14123a;color:#fff;border:1px solid #3a3470;border-radius:6px;
 table{width:100%;border-collapse:collapse;font-size:15px}th{color:#8f8bd0;text-align:left;font-size:12px;letter-spacing:1px}
 td,th{padding:5px 10px}tr.me td{color:#ffd24a;font-weight:800}
 #pause,#over{z-index:9;display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px;background:rgba(5,4,20,.72);text-align:center}
-#pause h1,#over h1{font-size:38px}.btn{background:#ff8a1e;border:0;color:#fff;font-weight:900;font-size:18px;padding:12px 34px;border-radius:10px;cursor:pointer}
+#pause h1,#over h1{font-size:38px}#pause .pbox>.pause-actions{position:sticky;top:-18px;z-index:12;justify-content:flex-end;margin:-8px -6px 4px;padding:6px;background:rgba(14,12,36,.97);border-radius:8px}#pause .pause-actions .btn{font-size:14px;padding:8px 12px}.btn{background:#ff8a1e;border:0;color:#fff;font-weight:900;font-size:18px;padding:12px 34px;border-radius:10px;cursor:pointer}
+#resetConfirm{position:fixed;inset:0;z-index:20000;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.76);padding:18px}
+#resetConfirm .reset-card{width:min(440px,94vw);padding:24px;background:#14123a;border:1px solid #665db5;border-radius:16px;box-shadow:0 20px 70px #0009;text-align:center}
+#resetConfirm h2{margin:0 0 8px;color:#ffb02e}
+#resetConfirm p{color:#c4c1e8;line-height:1.5}
+#resetConfirm .row{justify-content:center;flex-wrap:wrap}
+#matchChatBtn{position:fixed;right:14px;top:14px;z-index:59;display:none;background:#201d53;color:#fff;border:1px solid #625ca7;border-radius:8px;padding:8px 12px;font-weight:800;cursor:pointer}
 .btn.g{background:#2d2a62}.row{display:flex;gap:12px}
 #err{position:absolute;left:10px;bottom:10px;z-index:99;background:#700;color:#fff;font-size:12px;padding:6px 10px;border-radius:6px;display:none;max-width:70%}
 #note{position:absolute;bottom:80px;width:100%;text-align:center;font-size:13px;color:#ffd24a;text-shadow:0 0 4px #000}
@@ -135,11 +144,12 @@ tr.sec.t0 td{border-left:4px solid #ff3b3b}tr.sec.t1 td{border-left:4px solid #3
     <div class="sl2">FOV <input type="range" data-opt="fov" min="70" max="110"><span data-val="fov"></span></div>
     <div class="sl2">SENS <input type="range" data-opt="sens" min="20" max="250"><span data-val="sens"></span></div>
    </div>
-   <div class="help"><b>WASD</b> move · <b>Space</b> jump (bunny-hop ok) · <b>Shift</b> sprint · <b>E</b> dash · <b>Mouse</b> aim · <b>LMB</b> fire · <b>RMB</b> aim down sights<br><b>1 / 2 / 3</b> or scroll = weapon · <b>Q</b> last weapon · <b>R</b> reload · <b>Tab</b> scoreboard · <b>Esc</b> pause<br>Mouse lock block ho to <b>arrow keys</b> se bhi ghoom sakte ho.<br><b>Esc</b> = pause menu: match ke beech gun/skin badlo, settings aur graphics.</div><button class="btn g" id="reset" style="font-size:12px;padding:6px 14px">RESET PROFILE</button>
+   <div class="help"><b>WASD</b> move · <b>Space</b> jump (bunny-hop ok) · <b>Shift</b> sprint · <b>E</b> dash · <b>Mouse</b> aim · <b>LMB</b> fire · <b>RMB</b> aim down sights<br><b>1 / 2 / 3</b> or scroll = weapon · <b>Q</b> last weapon · <b>R</b> reload · <b>Enter</b> or <b>T</b> chat · <b>Tab</b> scoreboard · <b>Esc</b> pause<br>Mouse lock block ho to <b>arrow keys</b> se bhi ghoom sakte ho.<br><b>Esc</b> = pause menu: match ke beech gun/skin badlo, settings aur graphics.</div><button class="btn g" id="reset" style="font-size:12px;padding:6px 14px">RESET PROFILE</button>
   </div>
   <div class="panel"><h3>PRIMARY (1)</h3><div id="L_prim" class="list"></div><h3>SECONDARY (2)</h3><div id="L_sec" class="list"></div><h3>MELEE (3)</h3><div id="L_mel" class="list"></div><h3>ARM SKIN</h3><div id="L_skin" class="list"></div><h3>GUN SKIN</h3><div id="L_gskin" class="list"></div></div>
  </div>
 </div>
+<div id="resetConfirm" role="dialog" aria-modal="true" aria-labelledby="resetTitle" tabindex="-1"><div class="reset-card"><h2 id="resetTitle">Reset profile?</h2><p>This permanently deletes your profile, stats, XP, unlocked items, and selected loadout from this browser.</p><div class="row"><button class="btn g" id="resetCancel">CANCEL</button><button class="btn" id="resetConfirmBtn" style="background:#a52d3a">DELETE PROFILE &amp; PROGRESS</button></div></div></div>
 <div id="hud" class="ui">
  <div id="dmg"></div><div id="dirind"><i></i></div>
  <div id="xh"><i></i><i></i><i></i><i></i></div><div id="hm"></div>
@@ -151,7 +161,7 @@ tr.sec.t0 td{border-left:4px solid #ff3b3b}tr.sec.t1 td{border-left:4px solid #3
  <div id="death"><div>ELIMINATED</div><small id="deaths"></small></div>
 </div>
 <div id="sb"><div class="box"><div id="sbh"></div><table><thead><tr><th>#</th><th>PLAYER</th><th>KILLS</th><th>DEATHS</th><th>K/D</th></tr></thead><tbody id="sbb"></tbody></table></div></div>
-<div id="pause" class="ui"><div class="pbox"><h1>PAUSED</h1>
+<div id="pause" class="ui"><div class="pbox"><div class="row pause-actions"><button class="btn" id="resume">RESUME</button><button class="btn g" id="leave">LEAVE MATCH</button></div><h1>PAUSED</h1>
 <div class="tabs"><button class="tab on" data-tab="t1">LOADOUT</button><button class="tab" data-tab="t2">SETTINGS</button><button class="tab" data-tab="t3">GRAPHICS</button></div>
 <div class="tp on" id="t1"><div class="cols"><div><h3>PRIMARY (1)</h3><div id="P_prim" class="list"></div></div><div><h3>SECONDARY (2)</h3><div id="P_sec" class="list"></div><h3>MELEE (3)</h3><div id="P_mel" class="list"></div></div><div><h3>ARM SKIN</h3><div id="P_skin" class="list"></div><h3>GUN SKIN</h3><div id="P_gskin" class="list"></div></div></div><div class="hint">Gun/skin chunte hi turant lag jati hai. Naye items level badhne par unlock hote hain.</div></div>
 <div class="tp" id="t2">
@@ -159,6 +169,8 @@ tr.sec.t0 td{border-left:4px solid #ff3b3b}tr.sec.t1 td{border-left:4px solid #3
  <div class="sr">SENSITIVITY <input type="range" data-opt="sens" min="20" max="250"><span data-val="sens"></span></div>
  <div class="sr">VOLUME <input type="range" data-opt="vol" min="0" max="100"><span data-val="vol"></span></div>
  <div class="sr">CROSSHAIR COLOR <select data-opt="xcol"><option value="0">White</option><option value="1">Green</option><option value="2">Red</option><option value="3">Cyan</option><option value="4">Yellow</option></select></div>
+ <div class="sr">CROSSHAIR STYLE <select data-opt="xstyle"><option value="0">Classic</option><option value="1">Dot</option><option value="2">Circle</option></select></div>
+ <div class="sr">CROSSHAIR SIZE <input type="range" data-opt="xsize" min="60" max="160" step="10"><span data-val="xsize"></span>%</div>
  <div class="sr">INVERT Y AXIS <input type="checkbox" data-opt="inv"></div>
  <div class="sr">SHOW FPS <input type="checkbox" data-opt="fps"></div></div>
 <div class="tp" id="t3">
@@ -168,7 +180,7 @@ tr.sec.t0 td{border-left:4px solid #ff3b3b}tr.sec.t1 td{border-left:4px solid #3
  <div class="sr">CLOUDS <input type="checkbox" data-opt="gc"></div>
  <div class="sr">PARTICLES <input type="checkbox" data-opt="gp"></div>
  <div class="hint">Lag aa raha ho to Low preset ya Render Scale kam karo.</div></div>
-<div class="row" style="justify-content:center"><button class="btn" id="resume">RESUME</button><button class="btn g" id="leave">LEAVE MATCH</button></div></div></div>
+</div></div>
 <div id="over" class="ui"><h1 id="overt">MATCH OVER</h1><div class="box" style="background:rgba(14,12,36,.9);border:1px solid #3a3470;border-radius:14px;padding:18px 26px;min-width:420px"><table><thead><tr><th>#</th><th>PLAYER</th><th>KILLS</th><th>DEATHS</th><th>K/D</th></tr></thead><tbody id="overb"></tbody></table></div><div id="overx"></div><div class="row"><button class="btn" id="again">PLAY AGAIN</button><button class="btn g" id="tolobby">LOBBY</button></div></div>
 <div id="profile" class="ui"><div class="pb2"><h1>CREATE PROFILE</h1><p>Naya player? Apna naam aur color chuno. Level 0 se shuru karo, matches khelo, XP kamao aur level 100 tak guns aur skins unlock karo!</p><input id="pnick" maxlength="14" placeholder="Nickname"><div id="avs" class="avs"></div><button class="btn" id="pcreate">START →</button></div></div>
 <div id="err"></div>

@@ -52,7 +52,7 @@ function msg(req,res,m){
     case 'hb':break;
     case 'hit':{const o=target();if(o)push(o,{t:'hit',amt:Math.max(0,Math.min(150,num(m.amt))),head:!!m.head,wn:str(m.wn,12),from:p.id});break}
     case 'kill':{const o=target();if(o)push(o,{t:'kill',head:!!m.head,wn:str(m.wn,12),from:p.id});break}
-    case 'f':{const a=vec(m.a),b=vec(m.b);if(a&&b)for(const o of others(p))push(o,{t:'f',a,b,from:p.id});break}
+    case 'f':{const a=vec(m.a),b=vec(m.b),wk=['ak','sc','sn','sm','sg','lm','dm','dg','pi','ar'].includes(m.wk)?m.wk:'ar';if(a&&b)for(const o of others(p))push(o,{t:'f',a,b,wk,from:p.id});break}
     case 'start':if(p.room)for(const o of others(p))push(o,{t:'start',map:str(m.map,16),mode:str(m.mode,8),diff:num(m.diff)|0});break;
     case 'chat':{const text=str(m.m,120).trim();if(text)for(const o of others(p))push(o,{t:'chat',nm:p.nm,m:text});break}
     case 'freq':{const o=byName();if(o)push(o,{t:'freq',to:o.nm,from:p.nm});return json(res,{delivered:!!o})}
