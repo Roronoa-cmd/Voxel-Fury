@@ -20,3 +20,5 @@ The game uses Three.js from a CDN, so the browser needs internet access. For fri
 - Widened the lobby and separated map and mode sections.
 
 The referenced pistol pictures were used as visual guidance; the models are built from the game's own procedural geometry and textures.
+- Chat panel is movable with the grip button in its header; its position is remembered in the browser.
+- In a match, Escape opens Pause; Escape again resumes and reacquires pointer lock. The Resume button is at the top of the pause menu.
