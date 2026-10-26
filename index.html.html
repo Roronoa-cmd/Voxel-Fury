@@ -823,7 +823,7 @@ function equip(){const ko=!!curMode.knifeOnly,go=curMode.gunOnly,want=ko?{1:'kn'
 const mkW=k=>Object.assign({key:k,am:WP[k].mag,next:0,pump:0},WP[k]);
 const cw=()=>P.W[P.slot];
 function setSlot(s){if(!P||P.dead||s===P.slot||!P.W[s])return;P.prev=P.slot;P.slot=s;P.sw=.3;P.rl=0;P.bolt=0}
- function startReload(){const w=cw();if(w.melee||P.rl>0||w.am>=w.mag||P.sw>0)return;if(w.key==='ar')snd('arAutoStop');P.rl=w.rel;snd(w.key==='sg'?'pump':w.key==='ar'?'g36rl':'rl')}
+ function startReload(){const w=cw();if(w.melee||P.rl>0||w.am>=w.mag||P.sw>0)return;if(w.key==='ar')snd('arAutoStop');P.rl=w.rel;snd('rld')}
 
 /* ================= combat ================= */
 const feedTxt=(a,w,h,v)=>`<div><b style="color:${a===P?'#ffd24a':'#fff'}">${esc(a.name)}</b> <span class="w">[${esc(w)}]</span> ${h?'💀 ':''}<b style="color:${v===P?'#ffd24a':'#fff'}">${esc(v.name)}</b></div>`;
@@ -855,7 +855,7 @@ function fireP(){const w=cw();if(P.dead||P.rl>0||P.sw>0||P.bolt>0||gt<w.next)ret
   const h=hitscan(P,eye[0],eye[1],eye[2],dir[0],dir[1],dir[2],w.range);
   if(h.e){const hd=h.e.hp<40;damage(h.e,w.dmg*(hd?1.5:1),P,hd&&h.head,w.n);puff([eye[0]+dir[0]*h.t,eye[1]+dir[1]*h.t,eye[2]+dir[2]*h.t],0xcc2222);snd('hit',.8)}
   return}
- w.am--;snd(w.snd);
+ w.am--;snd(w.snd);if(w.key==='sg')setTimeout(()=>snd('pump'),350);
  cam.updateMatrixWorld(true);const mzv=cam.localToWorld(new THREE.Vector3(.2,-.17,-.7)),mz=[mzv.x,mzv.y,mzv.z];
  const moving=Math.hypot(P.vx,P.vz)>1||!P.ground;let spread=(w.sh+(w.sa-w.sh)*ads)*(moving?1.7:1);
  for(let i=0;i<w.pel;i++){const yy=P.yaw+(R()-.5)*2*spread,pp=P.pit+(R()-.5)*2*spread,c=Math.cos(pp),d=[-Math.sin(yy)*c,Math.sin(pp),-Math.cos(yy)*c];
@@ -1378,7 +1378,7 @@ renderFR();loadPL();
   setInterval(()=>{soc.classList.toggle('duringMatch',state==='play');soc.style.display=!NET.on||state==='over'?'none':state==='play'?(NET.chatOpen?'flex':'none'):'flex';renderParty()},400);
  document.addEventListener('keydown',e=>{if(state!=='play'||!NET.on)return;if(e.key==='Enter'&&document.activeElement!==$('ci')){e.preventDefault();NET.chatOpen=true;soc.style.display='flex';soc.querySelector('[data-t="c"]').click();$('ci').focus()}else if(e.key==='Escape'&&NET.chatOpen){NET.chatOpen=false;$('ci').blur()}});
  /* User-provided weapon, reload, hit, flyby and streak sounds. */
-  const SOUND_FILES={ak:'ak.wav',ar:'ar.wav',sc:'shot.wav',sn:'sniper.wav',sm:'smg.wav',sg:'dragon-studio-cinematic-shotgun-with-reload-467480.mp3',lm:'lmg.wav',dm:'dmr.wav',de:'desert eagle.wav',us:'piss.wav',kn:'katana.wav',kt:'katana.wav',bolt:'bolt.wav',pump:'pump.wav',flyby:'Voicy_Bullet Fly 1.mp3',head:'head.wav',ace:'ace1.wav',g36rl:'g36-reload.mp3'};
+  const SOUND_FILES={ak:'ak.wav',ar:'ar.wav',sc:'sc.wav',sn:'sniper.wav',sm:'smg.wav',sg:'shot.wav',lm:'lmg.wav',dm:'dmr.wav',de:'desert eagle.wav',us:'piss.wav',kn:'katana.wav',kt:'katana.wav',bolt:'bolt.wav',pump:'pump.wav',rld:'rld.wav',flyby:'Voicy_Bullet Fly 1.mp3',head:'head.wav',ace:'ace1.wav',g36rl:'g36-reload.mp3'};
   Object.entries(SOUND_FILES).forEach(([k,file])=>{fetch('sounds/'+encodeURIComponent(file)+'?v=scaraudio2').then(r=>r.ok?r.arrayBuffer():0).then(b=>{if(b)decodeSFX(k,b)}).catch(()=>{})});
  const _snd=snd;snd=function(k,v,far){v=v==null?1:v;if(k==='arAutoStop'){if(arAutoSource){try{arAutoSource.stop()}catch(e){}arAutoSource.disconnect();arAutoSource=null}return}if(k==='arAuto')k='ar';if(AC&&SMP[k]&&v>.02){if(AC.state==='suspended')AC.resume();const s=AC.createBufferSource(),g=AC.createGain();s.buffer=SMP[k];s.playbackRate=.97+Math.random()*.06;const quiet=k==='head'?.35:1;g.gain.value=v*quiet*(far?.7:1);s.connect(g);g.connect(OUT);s.start();return}if(k==='g36rl'&&!SMP[k])return _snd('rl',v,far);_snd(k,v,far)};
 })();
